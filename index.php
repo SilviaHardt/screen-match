@@ -1,79 +1,42 @@
 <?php
 
-require __DIR__ . "/src/funcoes.php";
+require __DIR__ . "/src/Modelo/Genero.php";
+require __DIR__ . "/src/Modelo/Titulo.php";
+require __DIR__ . "/src/Modelo/Filme.php";
+require __DIR__ . "/src/Modelo/Serie.php";
+require __DIR__ . "/src/Calculos/CalculadoraDeMaratona.php";
 
 echo "Bem-vindo(a) ao Screen Match!\n";
 
-$nomeFilme = "Top Gun - Maverick";
-$anoLancamento = 2022;
-
-$quantidadeDeNotas = $argc - 1;
-$notas = [];
-
-for ($i = 1; $i < $argc; $i++) { 
-    $notas[] = (float) $argv[$i];
-}
-
-$notaFilme = array_sum($notas) / $quantidadeDeNotas;
-$planoPrime = true;
-
-$incluidoNoPlano = incluidoNoPlano($planoPrime, $anoLancamento);
-
-echo "Nome do filme: " . $nomeFilme . "\n";
-echo "Nome do filme: $notaFilme\n";
-echo "Ano de lançamento: $anoLancamento\n";
-
-exibeMensagemLancamento($anoLancamento);
-
-$genero = match ($nomeFilme) {
-    "Top Gun - Maverick" => "ação",
-    "Thor: Ragnarok" => "super-herói",
-    "Se beber não case" => "comédia",
-    default => "gênero desconhecido",
-};
-
-echo "O gênero do filme é: $genero\n";
-
-$filme = criaFilme (
-    nome: "Thor: Ragnarok", 
-    anoLancamento: 2021, 
-    nota: 7.8, 
-    genero: "super-herói"
+$filme = new Filme(
+    'Thor - Ragnarok',
+    2021,
+    Genero::SuperHeroi,
+    180,
 );
 
-echo $filme["ano"];
+$filme->avalia(10);
+$filme->avalia(10);
+$filme->avalia(5);
+$filme->avalia(5);
 
-//exemplos de funções do PHP que manipulam arrays
-var_dump($notas);
-sort($notas);
-var_dump($notas);
-$menorNota = min($notas);
-var_dump($menorNota);
+var_dump($filme);
 
-//exemplos de funções do PHP que manipulam strings
-var_dump($filme['nome']);
-$posicaoDoisPontos = strpos($filme['nome'], ':');
-var_dump($posicaoDoisPontos);
-var_dump(substr($filme['nome'], 0, $posicaoDoisPontos));
+echo $filme->media() . "\n";
 
-//exemplo de manipulação de arquivos
-$filmeComoStringJson = json_encode($filme);
-file_put_contents(__DIR__ . '/filme.json', $filmeComoStringJson);
+echo $filme->anoLancamento . "\n";
 
+$serie = new Serie('Lost', 2007, Genero::Drama, 10, 20, 30);
 
+echo $serie->anoLancamento . "\n";
 
-//echo json_encode($filme);
+$serie->avalia(8);
 
-//var_dump(json_decode('{"nome":"Thor: Ragnarok","ano":2021,"nota":7.8,"genero":"super-her\u00f3i"}', true));
+echo $serie->media() . "\n";
 
-// $somaDeNotas = 0;
-// forEach ($notas as $nota) { 
-//     $somaDeNotas += $nota; 
-// }
+$calculadora = new CalculadoraDeMaratona();
+$calculadora->inclui($filme);
+$calculadora->inclui($serie);
+$duracao = $calculadora->duracao();
 
-// $contador = 1;
-// while ($argv[$contador] != 0) {
-//     $somaDeNotas += $argv[$contador++];
-// }
-
-//var_dump($argv);
+echo "Para essa maratona, você precisa de $duracao minutos";
